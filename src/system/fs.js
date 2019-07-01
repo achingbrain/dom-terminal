@@ -112,7 +112,7 @@ const fs = {
         continue
       }
 
-      throw new Error(`touch: ${input}: No such file or directory`)
+      throw new Error(`write: ${input}: No such file or directory`)
     }
 
     node.children[file] = createFile(content, opts)

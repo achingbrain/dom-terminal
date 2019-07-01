@@ -313,12 +313,17 @@ export async function createTerminal (containerID, options) {
       ret = output(err.message)
     }
 
-    const history = '~/.bash_history'
+    if (!opts.hidden) {
+      const history = '~/.bash_history'
+      let contents = ''
 
-    if (fs.getNode(history, session)) {
-      let contents = fs.read(history, session)
-      contents += `\n${cmdline}`
-      fs.write(history, contents, session)
+      if (fs.getNode(history, session)) {
+        contents = fs.read(history, session)
+        contents += '\n'
+      }
+
+      contents += cmdline
+      fs.write(history, contents, session, {})
     }
 
     options.prompt = `${session.env.USER} ${session.env.PWD.split('/').pop()} ${session.env.USER === 'root' ? '#' : '$'}`
