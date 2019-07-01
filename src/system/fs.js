@@ -40,8 +40,8 @@ const fs = {
   pwd: () => {
     return pwd
   },
-  getNode: (input) => {
-    let path = normalisePath(input)
+  getNode: (input, session) => {
+    let path = normalisePath(input, session)
 
     if (path === '/') {
       return fileSystem
@@ -65,8 +65,8 @@ const fs = {
 
     return node
   },
-  mkdir: (input, opts) => {
-    let path = normalisePath(input)
+  mkdir: (input, session, opts) => {
+    let path = normalisePath(input, session)
 
     path = path.replace(/^\/+/g, '').replace(/\/+$/g, '')
     const parts = path.split('/')
@@ -89,8 +89,8 @@ const fs = {
       throw new Error(`mkdir: ${input}: No such file or directory`)
     }
   },
-  write: (input, content, opts) => {
-    let path = normalisePath(input)
+  write: (input, content, session, opts) => {
+    let path = normalisePath(input, session)
 
     path = path.replace(/^\/+/g, '').replace(/\/+$/g, '')
     const parts = path.split('/')
@@ -117,9 +117,9 @@ const fs = {
 
     node.children[file] = createFile(content, opts)
   },
-  read: (input) => {
-    let path = normalisePath(input)
-    const node = fs.getNode(path)
+  read: (input, session) => {
+    let path = normalisePath(input, session)
+    const node = fs.getNode(path, session)
 
     if (!node) {
       throw new Error(`read: ${input}: No such file or directory`)
@@ -127,8 +127,8 @@ const fs = {
 
     return node.content
   },
-  rm: (input, opts) => {
-    let path = normalisePath(input)
+  rm: (input, session, opts) => {
+    let path = normalisePath(input, session)
 
     path = path.replace(/^\/+/g, '').replace(/\/+$/g, '')
     const parts = path.split('/')
@@ -157,9 +157,9 @@ const fs = {
 
     delete node.children[file]
   },
-  ls: (input) => {
-    let path = normalisePath(input || pwd)
-    const node = fs.getNode(path)
+  ls: (input, session) => {
+    let path = normalisePath(input || session.env.PWD, session)
+    const node = fs.getNode(path, session)
 
     if (!node) {
       throw new Error(`read: ${input}: No such file or directory`)
@@ -182,8 +182,12 @@ const fs = {
   }
 }
 
-function normalisePath (input) {
+function normalisePath (input, session) {
   let path = input
+
+  if (path.substring(0, 2) === '~/') {
+    path = `${session.env.HOME}/${path.substring(2)}`
+  }
 
   if (path.substring(0, 1) !== '/') {
     path = `${pwd}/${path}`

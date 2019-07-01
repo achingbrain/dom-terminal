@@ -9,7 +9,7 @@ module.exports = {
       throw new Error('usage: touch [-A [-][[hh]mm]SS] [-acfhm] [-r file] [-t [[CC]YY]MMDDhhmm[.SS]] file ...')
     }
 
-    fs.write(_[0], '', {
+    fs.write(_[0], '', session, {
       uid: users.find('alex').uid,
       gid: users.find('alex').gid
     })

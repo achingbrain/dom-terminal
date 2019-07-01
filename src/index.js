@@ -4,4 +4,4 @@ import {
   createTerminal
 } from './terminal'
 
-var terminal = createTerminal('terminal')
+createTerminal('terminal')

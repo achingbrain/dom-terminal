@@ -21,7 +21,8 @@
   "scripts": {
     "build": "webpack",
     "test": "node test/index.js",
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "lint": "standard"
   },
   "main": "src/terminal.js",
   "devDependencies": {

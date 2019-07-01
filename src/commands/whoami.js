@@ -1,6 +1,6 @@
 
 module.exports = {
   handler: (args, session) => {
-    session.api.clear()
+    return session.env.USER
   }
 }

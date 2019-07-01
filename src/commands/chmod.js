@@ -12,7 +12,7 @@ const setPerms = (node, perms) => {
 module.exports = {
   handler: (args, session) => {
     if (args._.length !== 2) {
-      throw new Error('usage:	chmod [-fhv] [-R [-H | -L | -P]] [-a | +a | =a  [i][# [ n]]] mode|entry file ...')
+      throw new Error('usage: chmod [-fhv] [-R [-H | -L | -P]] [-a | +a | =a  [i][# [ n]]] mode|entry file ...')
     }
 
     const mode = args._[0]
@@ -24,7 +24,7 @@ module.exports = {
       throw new Error(`chmod: chmod: Invalid file mode: ${mode}`)
     }
 
-    let node = fs.getNode(path)
+    let node = fs.getNode(path, session)
 
     if (!node) {
       throw new Error(`chmod: ${path}: No such file or directory`)

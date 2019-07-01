@@ -45,7 +45,7 @@ export default async function boot (session, options) {
 
   Object.keys(options.commands)
     .forEach(command => {
-      fs.write(command, options.commands[command].toString(), {
+      fs.write(command, options.commands[command].toString(), session, {
         ...users.ids('root'),
         p: true
       })

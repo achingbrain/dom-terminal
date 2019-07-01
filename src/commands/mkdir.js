@@ -10,7 +10,7 @@ module.exports = {
     }
 
     for (let i = 0; i < _.length; i++) {
-      fs.mkdir(_[i], {
+      fs.mkdir(_[i], session, {
         uid: users.find(session.env.USER).uid,
         gid: users.find(session.env.USER).gid,
         p: args.p

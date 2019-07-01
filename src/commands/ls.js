@@ -36,7 +36,7 @@ function calculatePerms (perms, position) {
 
 module.exports = {
   handler: (args, session) => {
-    let files = fs.ls(args._[0])
+    let files = fs.ls(args._[0], session)
     files = files.sort((a, b) => a.name.localeCompare(b.name))
 
     if (!args.a) {

@@ -1,5 +1,4 @@
 const users = require('../system/users')
-const groups = require('../system/groups')
 const fs = require('../system/fs')
 
 module.exports = {
@@ -14,17 +13,17 @@ module.exports = {
 
     users.add(name, home, group, supplementalGroups.split(','))
 
-    fs.mkdir(home, users.ids(name))
+    fs.mkdir(home, session, users.ids(name))
 
-    fs.mkdir(`${home}/Documents`, users.ids(name))
-    fs.mkdir(`${home}/Code`, users.ids(name))
-    fs.write(`${home}/.bash_history`, '', users.ids(name))
+    fs.mkdir(`${home}/Documents`, session, users.ids(name))
+    fs.mkdir(`${home}/Code`, session, users.ids(name))
+    fs.write(`${home}/.bash_history`, '', session, users.ids(name))
     fs.write(`${home}/.bash_profile`, `source /etc/profile
 
     export NVM_DIR="/${home}}/.nvm"
     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
-    nvm use 10`, users.ids(name))
+    nvm use 10`, session, users.ids(name))
   },
   args: {
     alias: {

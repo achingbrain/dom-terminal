@@ -20,7 +20,6 @@ const commands = {
   '/usr/bin/cat': require('./commands/cat'),
   '/usr/bin/cd': require('./commands/cd'),
   '/bin/chmod': require('./commands/chmod'),
-  '/usr/bin/clear': require('./commands/clear'),
   '/usr/bin/env': require('./commands/env'),
   '/bin/groupadd': require('./commands/groupadd'),
   '/usr/local/bin/help': require('./commands/help'),
@@ -34,7 +33,8 @@ const commands = {
   '/bin/useradd': require('./commands/useradd'),
   '/usr/local/bin/version': require('./commands/version'),
   '/usr/bin/which': require('./commands/which'),
-  [`/bin/${pkg.name}`]: require('./commands/terminatorator'),
+  '/usr/bin/whoami': require('./commands/whoami'),
+  [`/bin/${pkg.name}`]: require('./commands/terminatorator')
 }
 
 export async function createTerminal (containerID, options) {
@@ -63,6 +63,10 @@ export async function createTerminal (containerID, options) {
   Object.keys(commands).forEach(key => {
     options.commands[key] = options.commands[key] || commands[key]
   })
+
+  options.commands['/usr/bin/clear'] = {
+    handler: clear
+  }
 
   const session = {
     env: {
@@ -137,26 +141,26 @@ export async function createTerminal (containerID, options) {
 
   function historyHandler (e) {
     // Clear command-line on Escape key.
-    if (e.keyCode == KEYS.ESCAPE) {
+    if (e.keyCode === KEYS.ESCAPE) {
       _cmdLine.value = ''
       e.stopPropagation()
       e.preventDefault()
     }
 
-    if (_history.length && (e.keyCode == KEYS.ARROW_UP || e.keyCode == KEYS.ARROW_DOWN)) {
+    if (_history.length && (e.keyCode === KEYS.ARROW_UP || e.keyCode === KEYS.ARROW_DOWN)) {
       if (_history[_histpos]) {
         _history[_histpos] = _cmdLine.value
       } else {
         _histtemp = _cmdLine.value
       }
 
-      if (e.keyCode == KEYS.ARROW_UP) {
+      if (e.keyCode === KEYS.ARROW_UP) {
         _histpos--
 
         if (_histpos < 0) {
           _histpos = 0
         }
-      } else if (e.keyCode == KEYS.ARROW_DOWN) {
+      } else if (e.keyCode === KEYS.ARROW_DOWN) {
         _histpos++
 
         if (_histpos > _history.length) {
@@ -309,12 +313,12 @@ export async function createTerminal (containerID, options) {
       ret = output(err.message)
     }
 
-    const history = `${session.env.HOME}/.bash_history`
+    const history = '~/.bash_history'
 
-    if (fs.getNode(history)) {
-      let contents = fs.read(history)
+    if (fs.getNode(history, session)) {
+      let contents = fs.read(history, session)
       contents += `\n${cmdline}`
-      fs.write(history, contents)
+      fs.write(history, contents, session)
     }
 
     options.prompt = `${session.env.USER} ${session.env.PWD.split('/').pop()} ${session.env.USER === 'root' ? '#' : '$'}`

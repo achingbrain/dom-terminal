@@ -2,7 +2,7 @@ const fs = require('../system/fs')
 
 module.exports = {
   handler: (args, session) => {
-    let node = fs.getNode(args._[0])
+    let node = fs.getNode(args._[0], session)
 
     if (!node) {
       throw new Error(`cat: ${args._[0]}: No such file or directory`)

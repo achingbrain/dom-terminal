@@ -9,7 +9,7 @@ module.exports = {
     }
 
     for (let i = 0; i < _.length; i++) {
-      fs.rm(_[i], args)
+      fs.rm(_[i], session, args)
     }
 
     return ''
